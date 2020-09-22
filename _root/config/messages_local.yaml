@@ -1,0 +1,14 @@
+db:
+  database: prog_messages
+  user: root
+  password: dude
+  host: localhost
+  port: 3306
+  minsize: 1
+  maxsize: 5
+
+rabbit:
+  urn: amqp://guest:guest@localhost/
+
+auth:
+  url: http://localhost:3000/auth/whoami

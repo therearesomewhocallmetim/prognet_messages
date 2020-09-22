@@ -1,0 +1,14 @@
+db:
+  database: prog_messages
+  user: root
+  password: dude
+  host: database
+  port: 3306
+  minsize: 1
+  maxsize: 5
+
+rabbit:
+  urn: amqp://guest:guest@rabbit/
+
+auth:
+  url: http://ec2-18-222-32-142.us-east-2.compute.amazonaws.com/auth/whoami

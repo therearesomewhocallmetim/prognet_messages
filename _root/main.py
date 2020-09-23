@@ -56,14 +56,6 @@ def create_db(ctx):
     loop.run_until_complete(init_db.main(app))
 
 
-# @cli.command()
-# @click.pass_context
-# def generate_fake_data(ctx):
-#     app = ctx.obj['APP']
-#     loop = asyncio.get_event_loop()
-#     loop.run_until_complete(generate(app))
-
-
 @cli.command()
 @click.option('--port', type=click.INT, default=3000)
 @click.pass_context

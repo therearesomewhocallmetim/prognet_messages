@@ -1,9 +1,8 @@
 import binascii
 import json
-from base64 import b64decode
 from functools import wraps
 
-import jwt
+import requests
 from aiohttp import web
 
 from messages.models import Message
@@ -20,23 +19,19 @@ def db(fn):
     return wrapper
 
 
-def identity_from_token(token):
-    if not token:
-        return None
-    jwt_token = jwt.decode(
-        b64decode(token.encode()),
-        'insecure_shared_secret',
-        algorithm='HS256')
-    return jwt_token['identity']
+def identity_from_token(header, path):
+    resp = requests.get(path, headers={'Authorization': header})
+    data = resp.json()
+    return data['user_id']
 
 
 def user_id_from_token(fn):
     @wraps(fn)
     def wrapper(request, *args, **kwargs):
         try:
-            token = request.headers['Authorization']
-            bearer, _, token = token.partition(' ')
-            user_id = identity_from_token(token)
+            header = request.headers['Authorization']
+            path = request.app['config']['auth']['url']
+            user_id = identity_from_token(header, path)
             request['user_id'] = user_id
             return fn(request, *args, **kwargs)
         except (binascii.Error, KeyError):

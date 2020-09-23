@@ -7,8 +7,13 @@ class Message:
         offset = page * page_size
         profiles = await select(
             conn,
-            "SELECT * FROM message WHERE `to`=%s AND `from`=%s ORDER BY `on` DESC LIMIT %s OFFSET %s;",
-            [int(receiver_id), int(sender_id), page_size, offset])
+            """SELECT * FROM message 
+            WHERE 
+                (`to`=%(to)s AND `from`=%(from)s) 
+                OR 
+                (`to`=%(from)s AND `from`=%(to)s)  
+            ORDER BY `on` DESC LIMIT %(limit)s OFFSET %(offset)s;""",
+            {'to': int(receiver_id), 'from': int(sender_id), 'limit': page_size, 'offset': offset})
         return profiles
 
 
